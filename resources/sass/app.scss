@@ -2,9 +2,19 @@
 // Fonts
 @import url('https://fonts.googleapis.com/css?family=Nunito');
 
+
+// Partials
+
 // Variables
 @import 'variables';
-$fa-font-path: "../webfonts";
+
+//Typhography
+@import 'typography';
+
+//Icons 
+@import 'icons';
+
+// EndOf Partials
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
@@ -16,7 +26,13 @@ $fa-font-path: "../webfonts";
 @import "~@fortawesome/fontawesome-free/scss/brands.scss";
 
 
+//Extras
 .navbar-laravel {
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.router-link-exact-active {
+  background-color: rgb(23, 131, 255);
+  color: white !important;
 }
