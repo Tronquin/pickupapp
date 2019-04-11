@@ -2056,6 +2056,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -60563,16 +60565,26 @@ var render = function() {
                               _vm._v("Select User Role")
                             ]),
                             _vm._v(" "),
-                            _c("option", { attrs: { value: "admin" } }, [
+                            _c("option", { attrs: { value: "Admin" } }, [
                               _vm._v("Admin")
                             ]),
                             _vm._v(" "),
-                            _c("option", { attrs: { value: "Mod" } }, [
-                              _vm._v("Mod")
+                            _c(
+                              "option",
+                              { attrs: { value: "Desarrollador" } },
+                              [_vm._v("Desarrollador")]
+                            ),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "Empleado" } }, [
+                              _vm._v("Empleado")
                             ]),
                             _vm._v(" "),
-                            _c("option", { attrs: { value: "User" } }, [
-                              _vm._v("User")
+                            _c("option", { attrs: { value: "Picker" } }, [
+                              _vm._v("Picker")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "Usuario" } }, [
+                              _vm._v("Usuario")
                             ])
                           ]
                         ),

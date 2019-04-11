@@ -116,9 +116,11 @@
                   :class="{ 'is-invalid':form.errors.has('type')}"
                 >
                   <option value>Select User Role</option>
-                  <option value="admin">Admin</option>
-                  <option value="Mod">Mod</option>
-                  <option value="User">User</option>
+                  <option value="Admin">Admin</option>
+                  <option value="Desarrollador">Desarrollador</option>
+                  <option value="Empleado">Empleado</option>
+                  <option value="Picker">Picker</option>
+                  <option value="Usuario">Usuario</option>
                 </select>
                 <has-error :form="form" field="type"></has-error>
               </div>
