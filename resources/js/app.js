@@ -9,8 +9,37 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+//MomentJS
+import moment from "moment";
 // Vform
 import { Form, HasError, AlertError } from 'vform';
+// Vue-Progressbar
+import VueProgressBar from 'vue-progressbar'
+const options = {
+    color: '#bffaf3',
+    failedColor: 'red',
+    thickness: '5px',
+    transition: {
+        speed: '0.2s',
+        opacity: '0.6s',
+        termination: 300
+    },
+    autoRevert: true,
+    location: 'top',
+    inverse: false
+}
+Vue.use(VueProgressBar, options);
+//SweetAlert2
+import Swal from 'sweetalert2'
+window.Swal = Swal;
+const Toast = Swal.mixin({
+    Toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000
+});
+window.Toast = Toast;
+
 
 window.Form = Form;
 Vue.component(HasError.name, HasError);
@@ -31,6 +60,17 @@ const router = new VueRouter({
     routes
 });
 
+Vue.filter('capitalize', function (value) {
+    if (!value) return ''
+    value = value.toString()
+    return value.charAt(0).toUpperCase() + value.slice(1)
+});
+
+Vue.filter('normalDate', function (createdAt) {
+    return moment(createdAt).format('MMMM Do YYYY, h:mm:ss a'); // April 10th 2019, 8:15:36 pm
+});
+
+window.Fire = new Vue();
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

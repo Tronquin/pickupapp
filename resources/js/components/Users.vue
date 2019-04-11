@@ -22,17 +22,18 @@
                   <th>Name</th>
                   <th>Email</th>
                   <th>Type</th>
-                  <th>Modify</th>
+                  <th>Bio</th>
+                  <th>Registered At</th>
                 </tr>
-                <tr>
-                  <td>183</td>
-                  <td>John Doe</td>
-                  <td>11-7-2014</td>
+                <tr v-for="user in users" :key="user.id">
+                  <td>{{ user.id }}</td>
+                  <td>{{ user.name }}</td>
+                  <td>{{ user.email }}</td>
+                  <td>{{ user.type | capitalize }}</td>
+                  <td>{{ user.bio }}</td>
+                  <td>{{ user.created_at | normalDate }}</td>
                   <td>
-                    <span class="tag tag-success">Approved</span>
-                  </td>
-                  <td>
-                    <a href="#">
+                    <a href="#" @click="deleteUser(user.id)">
                       <i class="fas fa-edit blue"></i>
                     </a>
                     /
@@ -149,6 +150,7 @@
 export default {
   data() {
     return {
+      users: {},
       form: new Form({
         name: "",
         email: "",
@@ -161,11 +163,53 @@ export default {
   },
   methods: {
     createUser() {
-      this.form.post("api/user");
+      this.$Progress.start();
+      this.form
+        .post("api/user")
+        .then(() => {
+          Fire.$emit("AfterCreate");
+          $("#addNew").modal("hide"); //Cierra del Modal de Bootstrap
+          Toast.fire({
+            type: "success",
+            title: "El Usuario fue Creador Exitosamente!"
+          });
+          this.$Progress.finish();
+        })
+        .catch(() => {
+          Toast.fire({
+            type: "error",
+            title: "Hubo un Error al Crear el Usuario!"
+          });
+        });
+    },
+    deleteUser(id) {
+      Swal.fire({
+        title: "Estas Seguro que Quieres Eliminar este Usuario?",
+        text: "No hay vuelta atras si lo haces!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si, Eliminalo!"
+      }).then(result => {
+        //Ajax Request
+
+        if (result.value) {
+          Swal.fire("Listo!", "El Usuario ha sido Eliminado", "success");
+        }
+      });
+    },
+    loadUsers() {
+      axios.get("api/user").then(({ data }) => {
+        this.users = data.data;
+      });
     }
   },
   mounted() {
-    console.log("Component mounted.");
+    this.loadUsers();
+    Fire.$on("AfterCreate", () => {
+      this.loadUsers();
+    });
   }
 };
 </script>
