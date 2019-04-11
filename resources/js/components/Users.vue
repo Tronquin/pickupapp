@@ -33,11 +33,11 @@
                   <td>{{ user.bio }}</td>
                   <td>{{ user.created_at | normalDate }}</td>
                   <td>
-                    <a href="#" @click="deleteUser(user.id)">
+                    <a href="#">
                       <i class="fas fa-edit blue"></i>
                     </a>
                     /
-                    <a href="#">
+                    <a href="#" @click="deleteUser(user.id)">
                       <i class="fas fa-trash red"></i>
                     </a>
                   </td>
@@ -167,7 +167,7 @@ export default {
       this.form
         .post("api/user")
         .then(() => {
-          Fire.$emit("AfterCreate");
+          Fire.$emit("Refresh");
           $("#addNew").modal("hide"); //Cierra del Modal de Bootstrap
           Toast.fire({
             type: "success",
@@ -193,9 +193,21 @@ export default {
         confirmButtonText: "Si, Eliminalo!"
       }).then(result => {
         //Ajax Request
-
         if (result.value) {
-          Swal.fire("Listo!", "El Usuario ha sido Eliminado", "success");
+          this.form
+            .delete("api/user/" + id)
+            .then(() => {
+              Swal.fire("Listo!", "El Usuario ha sido Eliminado", "success");
+
+              Fire.$emit("Refresh");
+            })
+            .catch(() => {
+              Swal.fire(
+                "Error!",
+                "Algo salio mal al intentar eliminar el usuario",
+                "warning"
+              );
+            });
         }
       });
     },
@@ -207,7 +219,7 @@ export default {
   },
   mounted() {
     this.loadUsers();
-    Fire.$on("AfterCreate", () => {
+    Fire.$on("Refresh", () => {
       this.loadUsers();
     });
   }

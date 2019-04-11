@@ -2045,7 +2045,7 @@ __webpack_require__.r(__webpack_exports__);
 
       this.$Progress.start();
       this.form.post("api/user").then(function () {
-        Fire.$emit("AfterCreate");
+        Fire.$emit("Refresh");
         $("#addNew").modal("hide"); //Cierra del Modal de Bootstrap
 
         Toast.fire({
@@ -2062,6 +2062,8 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     deleteUser: function deleteUser(id) {
+      var _this2 = this;
+
       Swal.fire({
         title: "Estas Seguro que Quieres Eliminar este Usuario?",
         text: "No hay vuelta atras si lo haces!",
@@ -2073,25 +2075,30 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (result) {
         //Ajax Request
         if (result.value) {
-          Swal.fire("Listo!", "El Usuario ha sido Eliminado", "success");
+          _this2.form.delete("api/user/" + id).then(function () {
+            Swal.fire("Listo!", "El Usuario ha sido Eliminado", "success");
+            Fire.$emit("Refresh");
+          }).catch(function () {
+            Swal.fire("Error!", "Algo salio mal al intentar eliminar el usuario", "warning");
+          });
         }
       });
     },
     loadUsers: function loadUsers() {
-      var _this2 = this;
+      var _this3 = this;
 
       axios.get("api/user").then(function (_ref) {
         var data = _ref.data;
-        _this2.users = data.data;
+        _this3.users = data.data;
       });
     }
   },
   mounted: function mounted() {
-    var _this3 = this;
+    var _this4 = this;
 
     this.loadUsers();
-    Fire.$on("AfterCreate", function () {
-      _this3.loadUsers();
+    Fire.$on("Refresh", function () {
+      _this4.loadUsers();
     });
   }
 });
@@ -58648,6 +58655,8 @@ var render = function() {
                       ]),
                       _vm._v(" "),
                       _c("td", [
+                        _vm._m(2, true),
+                        _vm._v("\n                  /\n                  "),
                         _c(
                           "a",
                           {
@@ -58658,10 +58667,8 @@ var render = function() {
                               }
                             }
                           },
-                          [_c("i", { staticClass: "fas fa-edit blue" })]
-                        ),
-                        _vm._v("\n                  /\n                  "),
-                        _vm._m(2, true)
+                          [_c("i", { staticClass: "fas fa-trash red" })]
+                        )
                       ])
                     ])
                   })
@@ -58998,7 +59005,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("a", { attrs: { href: "#" } }, [
-      _c("i", { staticClass: "fas fa-trash red" })
+      _c("i", { staticClass: "fas fa-edit blue" })
     ])
   },
   function() {
