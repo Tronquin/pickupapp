@@ -7,7 +7,7 @@
             <h3 class="card-title">Users List</h3>
 
             <div class="card-tools">
-              <button class="btn btn-success" data-toggle="modal" data-target="#addNew">
+              <button class="btn btn-success" @click="newModal">
                 Add New
                 <i class="fas fa-user-plus fa-fw"></i>
               </button>
@@ -33,7 +33,7 @@
                   <td>{{ user.bio }}</td>
                   <td>{{ user.created_at | normalDate }}</td>
                   <td>
-                    <a href="#">
+                    <a href="#" @click="editModal(user)">
                       <i class="fas fa-edit blue"></i>
                     </a>
                     /
@@ -61,13 +61,14 @@
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="addNewLabel">Add New User</h5>
+            <h5 v-show="!editMode" class="modal-title" id="addNewLabel">Add New User</h5>
+            <h5 v-show="editMode" class="modal-title" id="addNewLabel">Edit User</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
 
-          <form @submit.prevent="createUser">
+          <form @submit.prevent="editMode ? updateUser() : createUser()">
             <div class="modal-body">
               <div class="form-group">
                 <input
@@ -137,7 +138,8 @@
 
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Create</button>
+              <button v-show="editMode" type="submit" class="btn btn-success">Update</button>
+              <button v-show="!editMode" type="submit" class="btn btn-primary">Create</button>
             </div>
           </form>
         </div>
@@ -150,6 +152,7 @@
 export default {
   data() {
     return {
+      editMode: true,
       users: {},
       form: new Form({
         name: "",
@@ -162,6 +165,34 @@ export default {
     };
   },
   methods: {
+    updateUser() {
+      console.log("fuck");
+    },
+    newModal() {
+      this.editMode = false;
+      this.form.reset();
+      $("#addNew").modal("show");
+    },
+    editModal(user) {
+      this.editMode = true;
+      this.form.reset();
+      $("#addNew").modal("show");
+      this.form
+        .fill(user)
+        .then(() => {
+          Fire.$emit("Refresh");
+          Toast.fire({
+            type: "success",
+            title: "El Usuario fue Editado Exitosamente!"
+          });
+        })
+        .catch(() => {
+          Toast.fire({
+            type: "error",
+            title: "Hubo un Error al Editar el Usuario!"
+          });
+        });
+    },
     createUser() {
       this.$Progress.start();
       this.form
