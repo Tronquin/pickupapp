@@ -155,6 +155,7 @@ export default {
       editMode: true,
       users: {},
       form: new Form({
+        id: "",
         name: "",
         email: "",
         password: "",
@@ -165,8 +166,25 @@ export default {
     };
   },
   methods: {
-    updateUser() {
-      console.log("fuck");
+    updateUser(id) {
+      this.$Progress.start();
+      this.form
+        .put("api/user/" + this.form.id)
+        .then(() => {
+          Fire.$emit("Refresh");
+          Toast.fire({
+            type: "success",
+            title: "El Usuario fue Editado Exitosamente!"
+          });
+          $("#addNew").modal("hide");
+        })
+        .catch(() => {
+          this.$Progress.finish();
+          Toast.fire({
+            type: "error",
+            title: "Hubo un Error al Editar el Usuario!"
+          });
+        });
     },
     newModal() {
       this.editMode = false;
@@ -177,21 +195,7 @@ export default {
       this.editMode = true;
       this.form.reset();
       $("#addNew").modal("show");
-      this.form
-        .fill(user)
-        .then(() => {
-          Fire.$emit("Refresh");
-          Toast.fire({
-            type: "success",
-            title: "El Usuario fue Editado Exitosamente!"
-          });
-        })
-        .catch(() => {
-          Toast.fire({
-            type: "error",
-            title: "Hubo un Error al Editar el Usuario!"
-          });
-        });
+      this.form.fill(user);
     },
     createUser() {
       this.$Progress.start();

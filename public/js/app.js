@@ -2033,6 +2033,7 @@ __webpack_require__.r(__webpack_exports__);
       editMode: true,
       users: {},
       form: new Form({
+        id: "",
         name: "",
         email: "",
         password: "",
@@ -2043,8 +2044,25 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    updateUser: function updateUser() {
-      console.log("fuck");
+    updateUser: function updateUser(id) {
+      var _this = this;
+
+      this.$Progress.start();
+      this.form.put("api/user/" + this.form.id).then(function () {
+        Fire.$emit("Refresh");
+        Toast.fire({
+          type: "success",
+          title: "El Usuario fue Editado Exitosamente!"
+        });
+        $("#addNew").modal("hide");
+      }).catch(function () {
+        _this.$Progress.finish();
+
+        Toast.fire({
+          type: "error",
+          title: "Hubo un Error al Editar el Usuario!"
+        });
+      });
     },
     newModal: function newModal() {
       this.editMode = false;
@@ -2055,21 +2073,10 @@ __webpack_require__.r(__webpack_exports__);
       this.editMode = true;
       this.form.reset();
       $("#addNew").modal("show");
-      this.form.fill(user).then(function () {
-        Fire.$emit("Refresh");
-        Toast.fire({
-          type: "success",
-          title: "El Usuario fue Editado Exitosamente!"
-        });
-      }).catch(function () {
-        Toast.fire({
-          type: "error",
-          title: "Hubo un Error al Editar el Usuario!"
-        });
-      });
+      this.form.fill(user);
     },
     createUser: function createUser() {
-      var _this = this;
+      var _this2 = this;
 
       this.$Progress.start();
       this.form.post("api/user").then(function () {
@@ -2081,7 +2088,7 @@ __webpack_require__.r(__webpack_exports__);
           title: "El Usuario fue Creador Exitosamente!"
         });
 
-        _this.$Progress.finish();
+        _this2.$Progress.finish();
       }).catch(function () {
         Toast.fire({
           type: "error",
@@ -2090,7 +2097,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     deleteUser: function deleteUser(id) {
-      var _this2 = this;
+      var _this3 = this;
 
       Swal.fire({
         title: "Estas Seguro que Quieres Eliminar este Usuario?",
@@ -2103,7 +2110,7 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (result) {
         //Ajax Request
         if (result.value) {
-          _this2.form.delete("api/user/" + id).then(function () {
+          _this3.form.delete("api/user/" + id).then(function () {
             Swal.fire("Listo!", "El Usuario ha sido Eliminado", "success");
             Fire.$emit("Refresh");
           }).catch(function () {
@@ -2113,20 +2120,20 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     loadUsers: function loadUsers() {
-      var _this3 = this;
+      var _this4 = this;
 
       axios.get("api/user").then(function (_ref) {
         var data = _ref.data;
-        _this3.users = data.data;
+        _this4.users = data.data;
       });
     }
   },
   mounted: function mounted() {
-    var _this4 = this;
+    var _this5 = this;
 
     this.loadUsers();
     Fire.$on("Refresh", function () {
-      _this4.loadUsers();
+      _this5.loadUsers();
     });
   }
 });
