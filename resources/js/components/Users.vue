@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    <div class="row mt-5">
+    <!-- USER AUTHENTICATION -->
+    <div class="row mt-5" v-if="$gate.isAdminOrDev()">
+      <!-- USER AUTHENTICATION END -->
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
@@ -50,6 +52,11 @@
         <!-- /.card -->
       </div>
     </div>
+
+    <div v-if="!$gate.isAdmin()">
+      <not-found></not-found>
+    </div>
+
     <div
       class="modal fade"
       id="addNew"
@@ -116,11 +123,11 @@
                   :class="{ 'is-invalid':form.errors.has('type')}"
                 >
                   <option value>Select User Role</option>
-                  <option value="Admin">Admin</option>
-                  <option value="Desarrollador">Desarrollador</option>
-                  <option value="Empleado">Empleado</option>
-                  <option value="Picker">Picker</option>
-                  <option value="Usuario">Usuario</option>
+                  <option value="admin">Admin</option>
+                  <option value="dev">Desarrollador</option>
+                  <option value="employee">Empleado</option>
+                  <option value="delivery">Picker</option>
+                  <option value="user">Usuario</option>
                 </select>
                 <has-error :form="form" field="type"></has-error>
               </div>
@@ -249,9 +256,11 @@ export default {
       });
     },
     loadUsers() {
-      axios.get("api/user").then(({ data }) => {
-        this.users = data.data;
-      });
+      if (this.$gate.isAdminOrDev()) {
+        axios.get("api/user").then(({ data }) => {
+          this.users = data.data;
+        });
+      }
     }
   },
   mounted() {

@@ -12,7 +12,7 @@
             <h5 class="widget-user-desc">Web Designer</h5>
           </div>
           <div class="widget-user-image">
-            <img class="img-circle" src alt="User Avatar">
+            <img class="img-circle" :src="getProfilePic()" alt="User Avatar">
           </div>
           <div class="card-footer">
             <div class="row">
@@ -433,6 +433,10 @@ export default {
     };
   },
   methods: {
+    getProfilePic() {
+      let prefix = this.form.photo.match(/\//) ? "" : "/img/profile/";
+      return prefix + this.form.photo;
+    },
     updateInfo() {
       this.$Progress.start();
       this.form

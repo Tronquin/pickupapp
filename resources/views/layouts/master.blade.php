@@ -54,8 +54,9 @@
           <img src="./img/man.svg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">
+          <a href="#" class="d-block user-name">
             {{ Auth::user()->name }}
+            <p class="user-rank">Rango: {{ Auth::user()->type }}</p>
           </a>
         </div>
       </div>
@@ -73,6 +74,7 @@
               </p>
             </router-link>
           </li>
+          @if(Gate::check('isAdmin') || Gate::check('isDeveloper'))
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-cog green"></i>
@@ -90,6 +92,7 @@
               </li>
             </ul>
           </li>
+          @endif
           <li class="nav-item">
             <router-link to="/profile" class="nav-link">
               <i class="nav-icon fas fa-user yellow"></i>
@@ -98,6 +101,7 @@
               </p>
             </router-link>
           </li>
+          @if(Gate::check('isAdmin') || Gate::check('isDeveloper'))
           <li class="nav-item">
             <router-link to="/developer" class="nav-link">
               <i class="nav-icon fas fa-cogs grey"></i>
@@ -106,6 +110,7 @@
               </p>
             </router-link>
           </li>
+          @endif
           <li class="nav-item">
             <a class="nav-link" href="{{ route('logout') }}"
                 onclick="event.preventDefault();
@@ -150,7 +155,11 @@
   </footer>
 </div>
 <!-- ./wrapper -->
-
+@auth
+<script>
+  window.user = @json(auth()->user());
+</script>
+@endauth
 <script src="/js/app.js"></script>
 </body>
 </html>

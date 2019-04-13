@@ -13,6 +13,10 @@ window.Vue = require('vue');
 import moment from "moment";
 // Vform
 import { Form, HasError, AlertError } from 'vform';
+//ALC Gate
+import Gate from "./Gate";
+Vue.prototype.$gate = new Gate(window.user);
+
 // Vue-Progressbar
 import VueProgressBar from 'vue-progressbar'
 const options = {
@@ -95,6 +99,11 @@ Vue.component(
 Vue.component(
     'passport-personal-access-tokens',
     require('./components/passport/PersonalAccessTokens.vue').default
+);
+
+Vue.component(
+    'not-found',
+    require('./components/not-found.vue')
 );
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);

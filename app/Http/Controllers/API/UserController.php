@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
@@ -26,7 +27,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::latest()->paginate(20);
+        if (Gate::allows('isAdmin') || Gate::allows('isDeveloper')) {
+            return User::latest()->paginate(20);
+        }
     }
 
     /**
@@ -37,14 +40,16 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required|string|max:191',
-            'email' => 'required|string|email|max:191|unique:users',
-            'password' => 'required|string|min:6'
-        ]);
-        $data = $request->all();
-        $data['password'] = hash::make($data['password']);
-        return User::create($data);
+        if (Gate::allows('isAdmin') || Gate::allows('isDeveloper')) {
+            $this->validate($request, [
+                'name' => 'required|string|max:191',
+                'email' => 'required|string|email|max:191|unique:users',
+                'password' => 'required|string|min:6'
+            ]);
+            $data = $request->all();
+            $data['password'] = hash::make($data['password']);
+            return User::create($data);
+        }
     }
 
     /**
@@ -67,18 +72,20 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = User::findOrFail($id);
-        $this->validate($request, [
-            'name' => 'required|string|max:191',
-            'email' => 'required|string|email|max:191|unique:users,email,'.$user->id,
-            'password' => 'sometimes|min:6'
-        ]);
-
-        if (!emtpy($request->password)) {
-            $request->merge(['password' => Hash::make($request['password'])]);
+        if (Gate::allows('isAdmin') || Gate::allows('isDeveloper')) {
+            $user = User::findOrFail($id);
+            $this->validate($request, [
+                'name' => 'required|string|max:191',
+                'email' => 'required|string|email|max:191|unique:users,email,'.$user->id,
+                'password' => 'sometimes|min:6'
+            ]);
+    
+            if (!empty($request->password)) {
+                $request->merge(['password' => Hash::make($request['password'])]);
+            }
+            $user->update($request->all());
+            return $id;
         }
-        $user->update($request->all());
-        return $id;
     }
 
     /**
@@ -87,15 +94,17 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
-        $user = User::findOrFail($id);
+        if (Gate::allows('isAdmin') || Gate::allows('isDeveloper')) {
+            $user = User::findOrFail($id);
 
-        //delete the user
-        $user->delete();
-
-        //response
-        return ['message' => 'Usuario Eliminado'];
+            //delete the user
+            $user->delete();
+    
+            //response
+            return ['message' => 'Usuario Eliminado'];
+        }
     }
 
     public function profile()
