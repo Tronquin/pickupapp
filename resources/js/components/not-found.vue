@@ -10,16 +10,6 @@
   </div>
 </template>
 
-<style>
-h1 {
-  color: purple;
-}
-
-h3 {
-  color: purple;
-}
-</style>
-
 
 <script>
 export default {

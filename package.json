@@ -27,8 +27,11 @@
   "dependencies": {
     "admin-lte": "^3.0.0-alpha.2",
     "axios": "^0.18.0",
+    "laravel-vue-pagination": "^2.3.0",
     "moment": "^2.24.0",
     "sweetalert2": "^8.8.3",
-    "vform": "^1.0.0"
+    "vform": "^1.0.0",
+    "vue-progressbar": "^0.7.5",
+    "vue-router": "^3.0.4"
   }
 }

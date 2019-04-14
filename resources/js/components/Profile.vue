@@ -8,8 +8,8 @@
             class="widget-user-header text-white"
             style="background: url('./img/asia-asian-auto-243108.jpg');"
           >
-            <h3 class="widget-user-username">Elizabeth Pierce</h3>
-            <h5 class="widget-user-desc">Web Designer</h5>
+            <h3 class="widget-user-username">{{ form.name }}</h3>
+            <h5 class="widget-user-desc">{{ form.type }}</h5>
           </div>
           <div class="widget-user-image">
             <img class="img-circle" :src="getProfilePic()" alt="User Avatar">
