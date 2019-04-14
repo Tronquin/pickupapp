@@ -109,6 +109,11 @@ Vue.component(
     require('./components/not-found.vue')
 );
 
+Vue.component(
+    'profile-pic',
+    require('./components/profile-pic.vue').default
+);
+
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
 /**
